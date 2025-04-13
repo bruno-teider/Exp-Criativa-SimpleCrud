@@ -47,8 +47,8 @@ export const updateUser = (req, res) => {
   const idusuario = req.params.id;
   const updates = Object.entries(req.body);
 
-  if (updates.length === 0) {
-    return res.status(400).json({ error: "Nenhum campo atualizado." });
+  if (updates.length <= 0) {
+    return res.status(400).json({ error: "Nenhum campo foi atualizado." });
   }
 
   const setClause = updates.map(([key]) => `${key} = ?`).join(", ");
