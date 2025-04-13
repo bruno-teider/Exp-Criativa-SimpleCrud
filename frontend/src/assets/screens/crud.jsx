@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import AddUserModal from "../components/addUserModal";
 
 function Detailed() {
   const [usersData, setUsersData] = useState([]);
+  const [showAddUserModal, setShowAddUserModal] = useState(false);
+  const [refresh, setRefresh] = useState(false); // This will be used to refresh after edit or add
 
   function getUserData() {
     fetch("http://localhost:8080/usuarios")
@@ -31,6 +34,13 @@ function Detailed() {
     getUserData();
   }, []);
 
+  useEffect(() => {
+    if (refresh === true) {
+      getUserData();
+      setRefresh(false);
+    }
+  }, [refresh]);
+
   return (
     <div className="bg-white min-h-screen p-6 ">
       <div className="flex justify-center mb-6 gap-4">
@@ -39,7 +49,10 @@ function Detailed() {
             Voltar
           </button>
         </Link>
-        <button className="bg-cyan-400 p-3 px-6 rounded-lg cursor-pointer hover:bg-cyan-500 shadow-md transition-all duration-200">
+        <button
+          onClick={() => setShowAddUserModal(true)}
+          className="bg-cyan-400 p-3 px-6 rounded-lg cursor-pointer hover:bg-cyan-500 shadow-md transition-all duration-200"
+        >
           Adicionar Usuário
         </button>
       </div>
@@ -75,6 +88,11 @@ function Detailed() {
           <p className="text-gray-500">Nenhum usuário encontrado.</p>
         )}
       </div>
+      <AddUserModal
+        visible={showAddUserModal}
+        setVisible={setShowAddUserModal}
+        setRefresh={setRefresh}
+      />
     </div>
   );
 }
