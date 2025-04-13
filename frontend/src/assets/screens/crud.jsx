@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import AddUserModal from "../components/addUserModal";
+import EditUserModal from "../components/editUserModal";
 
 function Detailed() {
   const [usersData, setUsersData] = useState([]);
   const [showAddUserModal, setShowAddUserModal] = useState(false);
-  const [refresh, setRefresh] = useState(false); // This will be used to refresh after edit or add
+  const [refresh, setRefresh] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState(null);
 
   function getUserData() {
     fetch("http://localhost:8080/usuarios")
@@ -71,7 +73,12 @@ function Detailed() {
                 <h2 className="text-md font-semibold">{user.nome}</h2>
               </div>
               <div className="flex gap-4 justify-center items-center">
-                <button className="bg-purple-400 p-3 px-7 rounded-lg cursor-pointer hover:bg-purple-500 shadow-md transition-all duration-200">
+                <button
+                  onClick={() => {
+                    setSelectedUserId(user.idusuario);
+                  }}
+                  className="bg-purple-400 p-3 px-7 rounded-lg cursor-pointer hover:bg-purple-500 shadow-md transition-all duration-200"
+                >
                   Editar
                 </button>
 
@@ -91,6 +98,11 @@ function Detailed() {
       <AddUserModal
         visible={showAddUserModal}
         setVisible={setShowAddUserModal}
+        setRefresh={setRefresh}
+      />
+      <EditUserModal
+        idusuario={selectedUserId}
+        setSelectedUserId={setSelectedUserId}
         setRefresh={setRefresh}
       />
     </div>
